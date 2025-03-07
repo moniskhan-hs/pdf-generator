@@ -8,12 +8,6 @@ import stealthPlugin from 'puppeteer-extra-plugin-stealth'
 const PORT = 4444
 import { executablePath } from 'puppeteer';
 
-
-admin.initializeApp({
-    credential: admin.credential.applicationDefault(), // or a service account key
-    storageBucket: "YOUR_BUCKET_NAME.appspot.com"
-  });
-
 app.get("/generatePdf", async (req, res) => {
     puppeteer.use(stealthPlugin());
     res.set("Access-Control-Allow-Origin", "*");
