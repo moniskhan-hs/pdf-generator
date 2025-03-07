@@ -16,7 +16,11 @@ app.get("/generatePdf", async (req, res) => {
     try {
       // Launch Puppeteer with desired options
       browser = await puppeteer.launch({
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage', // Prevents shared memory issues
+            '--single-process'],
         headless: true,
         executablePath: executablePath(),
       });
