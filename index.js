@@ -8,6 +8,7 @@ import stealthPlugin from 'puppeteer-extra-plugin-stealth'
 const PORT = 4444
 import { executablePath } from 'puppeteer';
 import chromium from '@sparticuz/chromium-min';
+import puppeteerCore from 'puppeteer-core';
 
 const dynamic = 'force-dynamic'
 const maxDuration = 60;
