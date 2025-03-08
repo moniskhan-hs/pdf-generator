@@ -53,7 +53,7 @@ app.get("/generatePdf", async (req, res) => {
   
       // Wait for navigation after clicking the submit button
       await Promise.all([
-        page.waitForNavigation({ waitUntil: "networkidle2", timeout: 30000 }),
+        page.waitForNavigation({ waitUntil: "networkidle2",}),
         page.click("[type=submit]")
       ]);
       console.log("Clicked login.");
