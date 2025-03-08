@@ -7,23 +7,40 @@ app.use(cors()); // Allow all origins
 import stealthPlugin from 'puppeteer-extra-plugin-stealth'
 const PORT = 4444
 import { executablePath } from 'puppeteer';
+import chromium from '@sparticuz/chromium-min';
 
+const dynamic = 'force-dynamic'
+const maxDuration = 60;
+
+puppeteer.use(stealthPlugin());
+
+console.log('process.env.NOD ', process.env.NODE_ENV === 'production')
 app.get("/generatePdf", async (req, res) => {
-    puppeteer.use(stealthPlugin());
     res.set("Access-Control-Allow-Origin", "*");
-  
     let browser;
+    
     try {
       // Launch Puppeteer with desired options
-      browser = await puppeteer.launch({
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage', // Prevents shared memory issues
-            '--single-process'],
-        headless: true,
-        executablePath: executablePath(),
-      });
+      if(process.env.NODE_ENV === 'production'){
+        const executablePath = await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar')
+        browser = await puppeteerCore.launch({
+            executablePath,
+            // You can pass other configs as required
+            args: chromium.args,
+            headless: chromium.headless,
+            defaultViewport: chromium.defaultViewport
+        })
+      }else{
+        browser = await puppeteer.launch({
+          args: [
+              '--no-sandbox',
+              '--disable-setuid-sandbox',
+              '--disable-dev-shm-usage', // Prevents shared memory issues
+              '--single-process'],
+          headless: true,
+          executablePath: 'C:\Program Files\Google\Chrome\Application\chrome.exe' ||  executablePath(),
+        });
+      }
   
       const page = await browser.newPage();
       console.log("Navigating to URL:", req.query.url);
@@ -50,16 +67,6 @@ app.get("/generatePdf", async (req, res) => {
       console.log("PDF generated, closing browser...");
       await browser.close();
   
-    //   // Upload PDF to Cloud Storage
-    //   const bucket = admin.storage().bucket();
-    //   const fileName = `pdfs/document-${Date.now()}.pdf`;
-    //   const file = bucket.file(fileName);
-    //   await file.save(pdfBuffer, {
-    //     metadata: { contentType: "application/pdf" },
-    //   });
-    //   await file.makePublic();
-    //   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-    //   console.log("PDF uploaded. Public URL:", publicUrl);
   
       res.status(200).json({
         type: "pdf",
