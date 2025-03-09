@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
     "dev": "nodemon server.js",
-    "build": "npm install && node scripts/install-chromium.js"
+   "start": "node index.js",
+    "build": "npm install"
   },
   "keywords": [],
   "author": "",
