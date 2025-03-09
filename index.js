@@ -43,7 +43,7 @@ app.get("/generatePdf", async (req, res) => {
     await page.type("#loginform-password", "Handy@123");
 
     await Promise.all([
-      page.waitForNavigation({ waitUntil: "networkidle2",timeout: 120000, }),
+      page.waitForNavigation({ waitUntil: "networkidle2",timeout: 1200000, }),
       page.click("[type=submit]"),
     ]);
     console.log("login completed");
