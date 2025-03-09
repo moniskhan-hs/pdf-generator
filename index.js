@@ -23,7 +23,7 @@ app.get("/generatePdf", async (req, res) => {
     try {
       // Launch Puppeteer with desired options
       if(process.env.NODE_ENV === 'production'){
-        const executablePath = await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar')
+        const executablePath = await chromium.executablePath()
         browser = await puppeteerCore.launch({
             executablePath,
             // You can pass other configs as required
