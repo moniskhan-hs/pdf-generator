@@ -30,9 +30,10 @@ app.get("/generatePdf", async (req, res) => {
     const page = await browser.newPage();
 
     console.log("Navigating to URL:", req.query.url);
-    await page.goto(req.query.url, { waitUntil: "networkidle2" });
+    await page.goto(req.query.url, { waitUntil: "networkidle2" ,timeout:120000});
 
     // Login handling
+    console.log("start login with crendentials.......")
     await page.type("#loginform-username", "rahul_matharu@handysolver.com");
     await page.type("#loginform-password", "Handy@123");
 
@@ -40,9 +41,13 @@ app.get("/generatePdf", async (req, res) => {
       page.waitForNavigation({ waitUntil: "networkidle2" }),
       page.click("[type=submit]")
     ]);
+console.log('login completed')
+console.log("Navigating with authentication:", req.query.url);
 
-    await page.goto(req.query.url, { waitUntil: "networkidle2",});
-    const pdfBuffer = await page.pdf({ printBackground: true });
+    await page.goto(req.query.url, { waitUntil: "networkidle2",timeout:120000});
+   
+console.log("Navigating with authentication completed:", req.query.url);
+const pdfBuffer = await page.pdf({ printBackground: true });
 
     await browser.close();
 
@@ -50,6 +55,7 @@ app.get("/generatePdf", async (req, res) => {
       type: "pdf",
       success: 'pdf generated successfully'
     });
+    console.log('pdf genereted successfully')
 
   } catch (error) {
     console.error("Error:", error);
