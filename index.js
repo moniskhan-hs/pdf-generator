@@ -11,7 +11,7 @@ import chromium from '@sparticuz/chromium-min';
 import puppeteerCore from 'puppeteer-core';
 
 const dynamic = 'force-dynamic'
-const maxDuration = 60;
+const maxDuration = 100;
 
 puppeteer.use(stealthPlugin());
 
@@ -59,16 +59,15 @@ app.get("/generatePdf", async (req, res) => {
       console.log("Clicked login.");
   
       // Optionally, navigate again if needed (e.g., to refresh the page post-login)
-      await page.goto(req.query.url, { waitUntil: "networkidle2" });
+      await page.goto(req.query.url, { waitUntil: "networkidle2" ,timeout:30000});
       console.log("Generating PDF...");
+    
       const pdfBuffer = await page.pdf({
         printBackground: true,
         preferCSSPageSize: false
       });
       console.log("PDF generated, closing browser...");
       await browser.close();
-  
-  
       res.status(200).json({
         type: "pdf",
         // pdfBuffer: pdfBuffer,
