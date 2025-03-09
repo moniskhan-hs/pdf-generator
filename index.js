@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
 
 const app = express();
 app.use(cors());
@@ -8,26 +9,22 @@ const PORT = process.env.PORT || 4444;
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+chromium.setHeadlessMode = true;
+chromium.setGraphicsMode = false;
+
 app.get("/generatePdf", async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   let browser;
 
   try {
     const options = {
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--single-process'
-      ]
+      args: chromium.args,
+      executablePath: isProduction 
+        ? await chromium.executablePath()
+        : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      headless: chromium.headless,
+      defaultViewport: chromium.defaultViewport
     };
-
-    if (isProduction) {
-      options.executablePath = '/usr/bin/chromium';
-    }else{
-      options.executablePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-    }
 
     browser = await puppeteer.launch(options);
     const page = await browser.newPage();
@@ -53,7 +50,6 @@ app.get("/generatePdf", async (req, res) => {
       type: "pdf",
       success: 'pdf generated successfully'
     });
-    console.log('pdf generated successfully:')
 
   } catch (error) {
     console.error("Error:", error);
@@ -68,7 +64,6 @@ app.get("/generatePdf", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
 app.get("/myname", async(req,res)=>{
 
 
