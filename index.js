@@ -33,15 +33,15 @@ app.get("/generatePdf", async (req, res) => {
     await page.goto(req.query.url, { waitUntil: "networkidle2" });
 
     // Login handling
-    await page.type("#loginform-username", "handysolver.com");
-    await page.type("#loginform-password", "y@123");
+    await page.type("#loginform-username", "rahul_matharu@handysolver.com");
+    await page.type("#loginform-password", "Handy@123");
 
     await Promise.all([
       page.waitForNavigation({ waitUntil: "networkidle2" }),
       page.click("[type=submit]")
     ]);
 
-    await page.goto(req.query.url, { waitUntil: "networkidle2", timeout: 30000 });
+    await page.goto(req.query.url, { waitUntil: "networkidle2",});
     const pdfBuffer = await page.pdf({ printBackground: true });
 
     await browser.close();
